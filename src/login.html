@@ -1,0 +1,67 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta charset="UTF-8"/>
+		<title>登录</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+	</head>
+	<body>
+		<div id="body">
+			<nav id="nav">
+				 <!--导航条 -->
+					<div id="logo"></div>
+					<ul>
+						<li v-for="(item,index) in navs"><a href="#" v-bind:class="{active:isActive==index}" v-on:click="clickActive(index)">{{item.label}}<span v-if="index==1" ></span></a></li>
+					</ul>
+			</nav>
+			<section>
+				 <!--登录部分 -->
+				 <div id="login">
+					 <div id="biglog"></div>
+					 <div>
+						 <ul id="logList">
+							<li><input type="text" v-bind:placeholder="logPh" @focus="foucsInt1" @blur="blurInt1" v-model="thisVal"><span class="span1" v-if="spanOpen">手机号</span></li>
+							<li><input type="password" v-bind:placeholder="passPh"  @focus="foucsInt2" @blur="blurInt2"  v-model="thisVal1"><span class="span2" v-if="spanOpen1">密码</span></li>
+							<li><button @click="submit">登录</button><span class="btnspan" v-if="noPass">密码未填写</span><span class="btnspan" v-if="noCall">请输入手机号</span>
+								<span class="btnspan" v-if="noSub">请输入正确的手机号密码
+								</span>
+								<span class="btnspan">
+									{{noMessage}}
+								</span>
+							</li>
+
+						 </ul>
+						 <div id="reg">
+							 <div id="chose" @click="choseImg">
+							 	<img src="imgs/login/03_2.png" v-if="imgc" alt="">
+							 </div>
+							 <a href="">7天内自动登陆</a>
+						 	 <span>
+							<a style="cursor: pointer;" @click="etargets">立即注册</a>
+							 <span>|</span>
+							 <a href="resetPassword.html">忘记密码</a>
+							 </span>
+						 </div>
+					 </div>
+				 </div>
+			</section>
+			<div id="bottom-title" class="bottom-title">
+				<ul class="bottom-title-ul">
+					<li><a href="./bottomhtml/aboutUs.html">关于我们</a> |</li>
+					<li><a href="./bottomhtml/callUs.html">联系我们</a> |</li>
+					<li><a href="./bottomhtml/joinUs.html">加入我们</a> |</li>
+					<li><a href="./bottomhtml/feedBack.html">意见反馈</a> |</li>
+					<li><a href="./bottomhtml/news.html">新闻动态</a> |</li>
+					<li><a href="./bottomhtml/helpCenter.html">帮助中心</a> |</li>
+					<li><a href="./bottomhtml/service.html">服务条款</a></li>
+				</ul>
+				<p class="bottom-title-p">
+					Copyright © 2018 云维 保留所有权利 / 京ICP备88888888号
+				</p>
+			</div>
+		</div>
+		<script type="text/javascript" src="../static/vue.js"></script>
+		<script src="../static/axios.min.js"></script>
+	</body>
+
+</html>

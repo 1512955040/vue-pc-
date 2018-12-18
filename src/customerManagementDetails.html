@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>客户档案</title>
+	<link rel="stylesheet" href="../static/element-ui.css">
+	<link rel="stylesheet" type="text/css" href="../static/css/font-awesome.min.css"/>
+</head>
+<body>
+	<div id="body">
+		<!-- 左边导航栏 -->
+		<div id="sidebar">       
+			<div class="imglogo"></div>
+			<ul>
+				<li v-for="(title_index,index) in titleIndex" @click="changeTitle(index)"><i :class="{active:changeTitles ===index }"></i></li>
+			</ul>
+		</div>
+		<div id="content">
+			<!--上方渐变条-->
+			<div id="linear-top"></div>
+			<!--介绍区域-->
+			<div id="detailHead">
+				<p>客户档案</p>
+				<ul>
+					<li></li>
+					<li></li>
+					<li></li>
+					<li></li>
+				</ul>
+				<div class="clear"></div>
+			</div>
+			<!--左边详情-->
+			<div id="sideLeft">
+				<ul>
+					<li id="sideLeftLi">
+						<b v-html="customerName"></b>
+						<span>
+						<i class="fa fa-pencil" @click="dialogVisible10=true;changeCustomer()"></i>
+						<el-popover popper-class="my-delete"
+								placement="top"
+								width="160"
+								v-model="visible4">
+								<div class="icon_title">
+									<i class="icon_mark"></i>
+									<span style="color: red;font-size: 14px;">确定删除吗?</span>
+								</div>
+									<p class="check_delete">
+													<input type="checkbox" id="checked4" @change="Delete_this($event)" style="margin-right:5px" /><label for="checked4">是的，确定删除</label>
+									</p>
+									<div class="bottom_wire"></div>
+								<div style="text-align: right; margin: 0">
+									<el-button type="danger" :loading="loading" @click="Delete_Customer()" :disabled="disabled" class="deleteNow">{{Detail_Deleting}}</el-button>
+									<el-button  @click="visible4 = false" class="cancel">取消</el-button>
+								</div>
+								<i class="fa fa-trash-o" slot="reference"></i>
+						</el-popover>
+						</span>
+						<!-- <el-button type="warning" id="infoBut">编辑</el-button> -->
+						<!-- <el-button type="info" id="infoBut">已关闭</el-button> -->
+					</li>
+					<el-dialog
+							title="客户档案编辑"
+							id="changeA"
+							:visible.sync="dialogVisible10"
+							width="680px"
+							>
+							<el-form ref="form1" :model="formChange" label-width="80px" :rules="rules3">
+									<el-form-item prop="name">
+										<el-input v-model="formChange.name" class="input"   placeholder="客户名称(必填)" ></el-input>
+									</el-form-item>
+									<el-form-item>
+											<el-select v-model="formChange.contactId" placeholder="请选择联系人(必选)" popper-class="my-autocomplete0"  @change="contact__pe" >
+												<el-option-group
+														v-for="group in changeContactOptions"
+														:key="group.label"
+														:label="group.label">
+													<el-option
+														v-for="(item,index) in group.options"
+														:key="item.id"
+														:label="item.name"
+														:value="item.id">
+													</el-option>
+												</el-option-group>
+											</el-select>
+									</el-form-item>
+									<el-form-item>
+										<el-input v-model="formChange.phone" class="input" :disabled="phoneDisabled"  placeholder="手机号"></el-input>	  
+									</el-form-item>
+									<el-form-item>
+										<el-input v-model="formChange.email" class="input" :disabled="phoneDisabled"  placeholder="邮箱"></el-input>
+									</el-form-item>		
+									<el-form-item>
+										<div class="customer_title">
+											<p>客户标签</p>
+											<ul>
+												<li v-for="(customerVIP,index) in customer_Label" @click="change_title(customerVIP.id)"><span><i :class="{'active_right':formChange.label == customerVIP.id }"></i></span> {{customerVIP.value}}</li>
+												<div class="clear"></div>
+											</ul>
+											<div class="clear"></div>
+										</div>
+									</el-form-item>
+									<el-form-item >
+										<div id="changA__div">
+											<p>所属区域</p>
+											<!--省-->
+											<el-select v-model="formChange.province" placeholder="省份" class="provicecity"
+												popper-class="my-provice" 
+												@focus="check_province1" 
+												@change="check_save1"
+												clearable
+												>
+													<el-option
+														v-for="item in options_Num2"
+														:key="item.value"
+														:label="item.name"
+														:value="item.id">
+													</el-option>
+										</el-select>
+										<!--城-->
+										<el-select v-model="formChange.city"  placeholder="城市" clearable popper-class="my-component1" @focus="check_citys1" @change="check_unit1" class="city_county">
+													<el-option
+														popper-class="my-provice"
+														v-for="item in options_Num3"
+														:key="item.value"
+														:label="item.name"
+														:value="item.id">
+													</el-option>
+											</el-select>
+											<!--县-->
+											<el-select v-model="formChange.county"  placeholder="区县" clearable popper-class="my-component1" @focus="check_county1" @change="check_countcity1" class="city_county">
+													<el-option
+														popper-class="my-provice"	
+														v-for="item in options_Num4"
+														:key="item.value"
+														:label="item.name"
+														:value="item.id">
+													</el-option>
+											</el-select>
+										</div>	
+									</el-form-item>		
+									<el-form-item prop="address">
+										<el-input
+												type="textarea"
+												:rows="2"
+												placeholder="请输入详细地址"
+												v-model="formChange.address">
+										</el-input>
+									</el-form-item>
+								</el-form>
+							<span slot="footer" class="dialog-footer">
+								<el-button @click="dialogVisible10 = false">取&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;消</el-button>
+								<el-button type="primary" @click="dialogVisible10 = false;submitChangeCustomer()">确&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;定</el-button>
+							</span>
+						</el-dialog>
+					<li>
+						<ul id="firstUl">
+							<li>联&nbsp; 系&nbsp;人<p v-html="contact1"></p></li>
+							<li>联系电话<p v-html="phone"></p></li>
+							<li>邮&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;箱<p v-html="email"></p></li>
+							<li>区&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;域<p v-html="province1"></p></li>
+							<li>详细地址<p v-html="address"></p></li>					
+						</ul>
+					</li>
+					<li id="sideLeft1">
+						<ul id="secUl">
+							<li>客户标签<p v-html="labelStr"></p></li>
+							<li>创建时间<p v-html="createTime"></p></li>
+							<li>最近服务<p v-html="startTime"></p></li>
+						</ul>
+					</li>
+				</ul>
+			</div>
+			<!-- 右边详情 -->
+			<div id="sideRight">
+				<ul id="tabs">
+					<li v-for="(item,index) in bckArr"><a  v-bind:class="{active:isActive==index}" v-on:click="bckClick(index)">{{item.label}}</a></li>
+				</ul>
+				<ul id="tabsRight">
+					<li><el-button plain  id="el-button" @click="backClick()">返&nbsp;&nbsp;&nbsp;&nbsp;回</el-button></li>
+					<li><el-button plain class="customerBtn" id="el-button" v-if="isArchives" @click="dialogVisible3=true;newarchClick()"  ><i class="fa fa-plus" style="font-size: 14px;margin-right:4px"></i>新建产品档案</el-button>		
+						<!--新建产品档案弹窗  -->
+						<el-dialog
+							title="新建产品档案"
+							:visible.sync="dialogVisible3"
+							width="680px" id="newWork">
+							<el-form ref="form" :model="form" label-width="80px">
+								<!--  <el-form-item>
+										<p style="font-size:16px;color:#191919;margin-left:14px;"><b>客户名称 :</b><span v-html="form.name"></span></p>
+								  </el-form-item> -->
+								  <el-form-item>
+									<el-select class="input" @focus="typeClick()" v-model="form.type" placeholder="请选择产品类别" width="620px">
+										<el-option
+												v-for="item in regoinOptions"
+												:key="item.name"
+												:label="item.name"
+												:value="item.name">
+										</el-option>
+									</el-select>
+								  </el-form-item>
+								  <el-form-item >
+										<el-select class="input" @focus="productClick()"  v-model="form.product" placeholder="请选择产品">
+											<el-option
+													v-for="item in productOptions"
+													:key="item.name"
+													:label="item.name"
+													:value="item.name">
+											</el-option>
+										</el-select>	  
+								  </el-form-item>
+								  <el-form-item >
+								  	<el-input v-model="form.number" class="input"  placeholder="请输入序列号"></el-input>
+								  </el-form-item>
+								  <el-form-item >
+									<el-date-picker class="input"  type="date" placeholder="请选择生产日期" v-model="form.date1" style="width: 100%;"></el-date-picker>
+								  </el-form-item>
+								  <el-form-item >
+									<el-date-picker type="date" class="input"  placeholder="请选择购买日期" v-model="form.date2" style="width: 100%;"></el-date-picker>
+								  </el-form-item>
+								  <el-form-item >
+										<el-input v-model="form.price" class="input"  placeholder="请输入购买价格"></el-input>
+								  </el-form-item>
+								  <el-form-item >
+									<el-select v-model="form.warrant"   class="input" placeholder="请选择保修期限">
+											<el-option
+													v-for="item in warOptions"
+													:key="item.value"
+													:label="item.label"
+													:value="item.value">
+											</el-option>
+										</el-select>
+								  </el-form-item>
+							<!-- 	  <el-form-item>
+										<el-date-picker class="input"  type="date" placeholder="请选择保修截至日期" v-model="form.date3" style="width: 100%;"></el-date-picker>
+								  </el-form-item> -->
+								  <el-form-item>
+										<el-input
+												type="textarea"
+												:rows="2"
+												placeholder="请输入内容"
+												v-model="form.textarea">
+										</el-input>
+								  </el-form-item>
+								</el-form>
+							<span slot="footer" class="dialog-footer">
+								<el-button @click="dialogVisible3 = false">取&nbsp;&nbsp;&nbsp;&nbsp;消</el-button>
+								<el-button type="primary" class="customerBtn" @click="dialogVisible3= false;submitArh();">确&nbsp;&nbsp;&nbsp;&nbsp;定</el-button>
+							</span>
+						</el-dialog>
+					</li>
+					<li id="newCustomer"><el-button plain id="el-button" class="customerBtn" v-if="isLinkman" @click="dialogVisible1 = true;newContactClick()" ><i class="fa fa-plus" style="font-size:14px;margin-right:4px"></i>新建联系人</el-button>
+						<el-dialog
+							title="新建联系人"
+							id="buildCustomer"
+							:visible.sync="dialogVisible1"
+							width="680px">
+								<ul id="newCustomerUl">
+									<li>
+										<el-input v-model="contact.name" placeholder="联系人姓名"></el-input>
+									</li>
+									<li style="color:black" id="sexLi">
+										<div id="customerSex" class="customer_title customer_sex">
+											<p>性别</p>
+											<ul>
+												<li v-for="(customerSex,index) in customer_sex" @click="change_sex(customerSex.id)"><span><i :class="{'active_sex':contact.radio == customerSex.id }"></i></span> {{customerSex.value}}</li>
+												<div class="clear"></div>
+											</ul>
+											<div class="clear"></div>
+										</div>
+									</li>
+									<li>
+									<el-input v-model="contact.prosition" placeholder="联系人职位"></el-input>
+									</li>
+									<li>
+										<el-input v-model="contact.phone" placeholder="联系人手机号"></el-input>
+									</li>
+									<li>
+										<el-input v-model="contact.email" placeholder="联系人邮箱"></el-input>
+									</li>
+									<li id="contactSelect">
+										<div class="customer_save">
+
+											<p>所属区域</p>
+											<!--省-->
+											<el-select v-model="numberValidateForm1.province" placeholder="省份" class="provicecity"
+												popper-class="my-provice" 
+												@focus="check_province0" 
+												@change="check_save0"
+												clearable
+												>
+													<el-option
+														v-for="item in options_Num2"
+														:key="item.value"
+														:label="item.name"
+														:value="item.id">
+													</el-option>
+										</el-select>
+										<!--城-->
+										<el-select v-model="numberValidateForm1.city"  placeholder="城市" clearable popper-class="my-component1" @focus="check_citys0" @change="check_unit0" class="city_county">
+													<el-option
+														popper-class="my-provice"
+														v-for="item in options_Num3"
+														:key="item.value"
+														:label="item.name"
+														:value="item.id">
+													</el-option>
+											</el-select>
+											<!--县-->
+											<el-select v-model="numberValidateForm1.county"  placeholder="区县" clearable popper-class="my-component1" @focus="check_county0" @change="check_countcity0" class="city_county">
+													<el-option
+														popper-class="my-provice"	
+														v-for="item in options_Num4"
+														:key="item.value"
+														:label="item.name"
+														:value="item.id">
+													</el-option>
+											</el-select>
+											</div>
+									</li>
+									<li>
+										<el-input
+											type="textarea"
+											:rows="2"
+											placeholder="详细联系地址..."
+											v-model="contact.address">
+										</el-input>
+									</li>
+									<li>
+										<el-input
+											type="textarea"
+											:rows="2"
+											placeholder="请输入备注信息"
+											v-model="contact.dec">
+										</el-input>
+									</li>
+								</ul>
+							<span slot="footer" class="dialog-footer">
+							<el-button @click="dialogVisible1 = false">取&nbsp;&nbsp;&nbsp;&nbsp;消</el-button>
+							<el-button type="primary" class="customerBtn" @click="dialogVisible1 = false;submitContact()">确&nbsp;&nbsp;&nbsp;&nbsp;定</el-button>
+							</span>
+						</el-dialog>	
+					</li>
+					<li id="contract"><el-button plain id="el-button" class="customerBtn" v-if="isFile" @click="dialogVisible2=true" >上传合同</el-button>
+						<el-dialog
+							title="合同上传"
+							:visible.sync="dialogVisible2"
+							width="680px">
+							 <ul >
+							 	<li><el-input v-model="contract.number" placeholder="合同编号"></el-input></li>
+								<li><el-input v-model="contract.name" placeholder="合同名称"></el-input></li>
+							 	<li><el-input v-model="contract.left" placeholder="甲方"></el-input></li>
+								<li><el-input v-model="contract.right" placeholder="乙方"></el-input></li>
+							 	<li><el-date-picker type="date" v-model="contract.beginTime" placeholder="生效时间" ></el-date-picker></li>
+								<li><el-date-picker type="date" v-model="contract.offTime" placeholder="失效时间" ></el-date-picker></li>
+								<li>
+									<el-select v-model="contract.type" placeholder="合同类别" @change="contractTypeBlur()">
+											<el-option
+											v-for="item in contractTypeOptions"
+											:key="item.value"
+											:label="item.label"
+											:value="item.value">
+											</el-option>
+										</el-select>
+								</li>
+								<li id="SLAselect">  <el-select v-model="contract.SLA" v-bind:disabled="disabled1" @focus="SLAfocus()" placeholder="签订的SLA">
+										<el-option
+										  v-for="item in slaOptions"
+										  :key="item.id"
+										  :label="item.name"
+										  :value="item.id">
+										</el-option>
+									  </el-select>
+								</li>
+								
+								<li >
+									<span style="color:black;font-size:17px;margin-left:14px">合同上传</span>
+									<div id="uploadDiv">
+									<el-upload
+											action="/importFile"
+											list-type="picture-card"
+											:on-success="uploadFileSuccess"
+											:on-preview="handlePictureCardPreview"
+											:on-remove="handleRemove">
+											<i class="el-icon-plus"></i>
+									</el-upload>
+									<el-dialog :visible.sync="dialogVisible5">
+									  <img width="100%" :src="dialogImageUrl" alt="">
+									</el-dialog>
+									</div>
+								</li>
+							 </ul>
+							  <span slot="footer" class="dialog-footer">
+								<el-button @click="dialogVisible2 = false">取&nbsp;&nbsp;&nbsp;&nbsp;消</el-button>
+								<el-button type="primary" class="customerBtn" @click="dialogVisible2 = false;submitContract()">确&nbsp;&nbsp;&nbsp;&nbsp;定</el-button>
+							  </span>
+							</el-dialog>
+					</li>
+
+				</ul>
+				
+				<div id="tablesOne" v-if="tablesOneClick">
+						<ul class="RightFormConent_title">
+							<li>产品名称</li>
+							<li>产品类别</li>
+							<!-- <li>产品序列号</li> -->
+							<!-- <li>购买日期</li> -->
+							<!-- <li>截止日期</li> -->
+							<li>在保状态</li>
+							<li>详情</li>
+							<div class="clear"></div>
+						</ul>
+						<ul class="RightFormConent_Content" v-for="(item,index) in tablesOneOptions"  @click="detailsClick(item.id)" >
+							<el-tooltip class="item" effect="dark" :content="item.name" placement="top-start" popper-class="tool_tip" v-if='item.name.length>16'>
+								<li v-html="item.name.length>16 ? item.name.Substring(0,16) : item.name"></li>
+							</el-tooltip>
+								<li v-html="item.name.length>16 ? item.name.Substring(0,16) : item.name" v-else></li>
+							<li>{{item.model}}</li>
+							<!-- <li>{{item.productUuid}}</li> -->
+							<!-- <li>{{item.buyDate}}</li> -->
+							<!-- <li>{{item.warrantyEnd }}</li> -->
+							<li><span class="oprate_color" :class="{color2:item.warrantyStatusStr=='在保',color3:item.warrantyStatusStr=='未在保',color4:item.warrantyStatusStr=='未知'}" v-html="item.warrantyStatusStr"></span></li>
+							<li class="btnTd">
+								<i class="fa fa-file-text-o detail_fa" aria-hidden="true" @click="detailsClick(item.id)"></i>
+								
+							</li>
+							<div class="clear">
+							</div>
+						</ul>
+						<el-dialog
+							title="产品档案详情"
+							id="contactDetails"
+							:visible.sync="dialogVisible"
+							width="680px">
+							<ul>
+								<li>联&nbsp;系&nbsp;人<p>{{details.customerName}}</p></li>
+								<li>产品名称<p>{{details.name}}</p></li>
+								<li>产品型号<p>{{details.model}}</p></li>
+								<li>产品类别<p>{{details.typeName}}</p></li>
+								<li>产品序列号<p>{{details.productUuid}}</p></li>
+								<li>购买价格<p>{{details.buyPrice}}元</p></li>
+								<li>生产日期<p>{{details.producedDate}}</p></li>
+								<li>购买日期<p>{{details.buyDate}}</p></li>
+								<li>截至日期<p>{{details.warrantyEnd}}</p></li>
+								<li>维修期限<p>{{details.warrantyPeriod}}个月</p></li>
+
+								<li>在保状态<p>{{details.warrantyStatusStr}}</p></li>
+								<li>备&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;注<p>{{details.describes}}</p></li>
+
+							</ul>
+							<span slot="footer" class="dialog-footer">
+								<el-button @click="dialogVisible3 = true;archDetails(detailsId)" type="warning">编&nbsp;&nbsp;&nbsp;&nbsp;辑</el-button>
+								<el-popover popper-class="my-delete"
+										placement="top"
+										width="160"
+										v-model="visible2">
+										<div class="icon_title">
+											<i class="icon_mark"></i>
+											<span style="color: red;font-size: 14px;">确定删除吗?</span>
+										</div>
+											<p class="check_delete">
+													<input type="checkbox" id="checked3" @change="Delete_this($event)" style="margin-right:5px" /><label for="checked3">是的，确定删除</label>
+											</p>
+											<div class="bottom_wire"></div>
+										<div style="text-align: right; margin: 0">
+											<el-button type="danger" :loading="loading" @click="Delete_Detail(detailsId)" :disabled="disabled" class="deleteNow">{{Detail_Deleting}}</el-button>
+											<el-button  @click="visible2 = false" class="cancel">取消</el-button>
+										</div>
+										<el-button slot="reference" @click="Detail_Delete" type="danger">删&nbsp;&nbsp;&nbsp;&nbsp;除</el-button>
+								</el-popover>
+							</span>
+							</el-dialog>
+						<el-pagination
+								@current-change="handleCurrentChange"
+								:current-page.sync="pageNum"
+								:page-size="8"
+								layout="total, prev, pager, next"
+								:total="this.totals">
+						</el-pagination>
+				</div>
+				<div id="tablesTwo" v-if="tablesTwoClick">
+					<ul class="RightFormConent_title">
+						<li>姓名</li>
+						<li>性别</li>
+						<li>职位</li>
+						<li>电话</li>
+						<li>详情</li>
+						<div class="clear"></div>
+					</ul>
+							<ul class="RightFormConent_Content" v-for="(item,index) in tablesTwoOptions" @click="contactDetails(item.id)">
+								<li>{{item.name}}</li>
+								<li>{{item.sexStr}}</li>
+								<li>{{item.position}}</li>
+								<li>{{item.phone}}</li>
+								<li class="btnTd">
+									<i class="fa fa-file-text-o detail_fa" aria-hidden="true" @click.stop="contactDetails(item.id)"></i>
+								</li>
+							</ul>
+							<el-pagination
+									@current-change="handleCurrentChange1"
+									:current-page.sync="pageNum1"
+									:page-size="8"
+									layout="total, prev, pager, next"
+									:total="this.totals1">
+							</el-pagination>
+							<el-dialog
+								title="联系人详情"
+								id="customerDetails"
+								:visible.sync="dialogVisible4"
+								width="680px">
+								<ul >
+									<li>姓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;名<p>{{contactDetailsOptions.name}}</p></li>
+									<li>性&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;别<p>{{contactDetailsOptions.sex}}</p></li>
+									<li>职&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;位<p>{{contactDetailsOptions.position}}</p></li>
+									<li>电&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;话<p>{{contactDetailsOptions.phone}}</p></li>
+									<li>邮&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;箱<p>{{contactDetailsOptions.email}}</p></li>
+									<li>所属区域<p>{{contactDetailsOptions.province+contactDetailsOptions.city+contactDetailsOptions.county}}</p></li>
+									<li>详细地址<p>{{contactDetailsOptions.address}}</p></li>
+								</ul>
+								<span slot="footer" class="dialog-footer">
+									<el-button @click="dialogVisible1 = true;contactEdit(contactDetailsId)" type="warning">编&nbsp;&nbsp;&nbsp;&nbsp;辑</el-button>
+									<el-popover popper-class="my-delete"
+											placement="top"
+											width="160"
+											v-model="visible2">
+											<div class="icon_title">
+												<i class="icon_mark"></i>
+												<span style="color: red;font-size: 14px;">确定删除吗?</span>
+											</div>
+												<p class="check_delete" >
+													<input type="checkbox" id="checked2" style="margin-right:5px" @change="Delete_this($event)" /><label for="checked2">是的，确定删除</label>
+												</p>
+												<div class="bottom_wire"></div>
+											<div style="text-align: right; margin: 0">
+												<el-button type="danger" :loading="loading" @click="Delete_Detail(contactDetailsId)" :disabled="disabled" class="deleteNow">{{Detail_Deleting}}</el-button>
+												<el-button  @click="visible2 = false" class="cancel">取消</el-button>
+												<!--<img class="rightImg" src="imgs/workOrder/02_03.png"/>-->
+											</div>
+											<el-button slot="reference" @click="Detail_Delete" type="danger">删&nbsp;&nbsp;&nbsp;&nbsp;除</el-button>
+									</el-popover>
+								</span>
+								</el-dialog>
+				</div>
+				<div id="tablesThr" v-show="tablesThrClick">
+					<ul class="RightFormConent_title">
+						<li>名称</li>
+						<li>合同类型</li>
+						<li>SLA类型</li>
+						<li>合同状态</li>
+						<li>操作</li>
+						<div class="clear"></div>
+					</ul>
+					<ul class="RightFormConent_Content" v-for="(item,index) in pact">
+						<li>{{item.contractName}}</li>
+						<li>{{item.contractTypeStr}}</li>
+						<li>{{item.slaTypeName}}</li>
+						<el-tooltip class="item" effect="dark"  placement="top-start" popper-class="tool_tip">
+							<div slot="content">{{item.dateTime}}<br/>{{item.dateTime2}}</div>
+						<li><el-button :type="item.contractStatusColor" class="pactBtn" :disabled="item.disabled" @click="contractJh(item.contractUuid)">{{item.contractStatusStr}}</el-button></li>
+						</el-tooltip>
+						<li class="btnTd">
+							<el-button type="primary" class="pactBtn"  @click="contractJh(item.contractUuid)" v-if="item.isStre">可激活</el-button>
+							<el-button plain v-if="item.isStre1" class="pactBtn" disabled>已激活</el-button>
+							<el-button type="warning" id="detailsBtn"  @click="contractDetails(item.contractUuid)">详情</el-button>
+									
+									
+								</li>
+							</ul>
+							<el-dialog
+								title="合同详情"
+								id="pactDetails"
+								:visible.sync="dialogVisible6"
+								width="680px">
+								<ul id="pactDetailsUl">
+									<li>合同名称<p>{{contractDetailsOptions.contractName}}</p></li>
+									<li>合同编号<p>{{contractDetailsOptions.contractNumber}}</p></li>
+									<li>甲&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;方<p>{{contractDetailsOptions.firstParty}}</p></li>
+									<li>乙&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;方<p>{{contractDetailsOptions.secondParty}}</p></li>
+									<li>开始时间<p>{{contractDetailsOptions.effectiveTime}}</p></li>
+									<li>失效时间<p>{{contractDetailsOptions.ineffectiveTime}}</p></li>
+									<li>合同类别<p>{{contractDetailsOptions.contractTypeStr}}</p></li>
+									<li id="slaType">SLA类&nbsp;型<p>{{contractDetailsOptions.slaTypeName}}</p>
+											<table>
+												<tr>
+													<td>紧急程度</td>
+													<td>响应时效</td>
+													<td>解决时效</td>
+												</tr>
+												<!-- contractDetailsOptions.ordinary.responseTime -->
+											 <tr>
+													<td>一&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;般</td>
+													 <td>														 
+														 <span v-if="contractDetailsOptions.ordinary">{{contractDetailsOptions.ordinary.responseTime}}小时</span>
+													 </td> 
+													 
+													<td v-if="contractDetailsOptions.ordinary">{{contractDetailsOptions.ordinary.solveTime}}小时</td>
+												</tr>
+												<tr>
+													<td>紧&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;急</td>
+													<td v-if="contractDetailsOptions.emergency">{{contractDetailsOptions.emergency.responseTime}}小时</td>
+													<td v-if="contractDetailsOptions.emergency">{{contractDetailsOptions.emergency.solveTime}}小时</td>
+												</tr>
+												<tr>
+													<td>非常紧急</td>
+													<td v-if="contractDetailsOptions.veryEmergency">{{contractDetailsOptions.veryEmergency.responseTime}}小时</td>
+													<td v-if="contractDetailsOptions.veryEmergency">{{contractDetailsOptions.veryEmergency.solveTime}}小时</td>
+												</tr>
+											</table>
+									</li>
+									<li>合同下载</li>
+								</ul>
+								<ul id="pactDetailsDownload">
+									<li v-for="pactDownload in contractDetailsOptions.fileInfos">{{pactDownload.oldFileName}} <el-button type="primary" @click="download(pactDownload.newFileName)">下载</el-button></li>
+								</ul>
+								<span slot="footer" class="dialog-footer">
+									<el-button @click="dialogVisible6 = false">取&nbsp;&nbsp;&nbsp;&nbsp;消</el-button>
+								</span>
+							</el-dialog>
+							<el-pagination
+									@current-change="handleCurrentChange2"
+									:current-page.sync="pageNum2"
+									:page-size="8"
+									layout="total, prev, pager, next"
+									:total="this.totals2">
+							</el-pagination>
+				</div>
+				<div id="tablesFour" v-if="tablesFourClick">
+					<ul class="RightFormConent_title">
+						<li>工单编号及创建时间</li>
+						<li>客户名称</li>
+						<li>产品名称</li>
+						<li>产品型号</li>
+						<li>工单状态</li>
+						<div class="clear"></div>
+					</ul>
+					<ul class="RightFormConent_Content" v-for="(item,index) in historyOptions" @click="workSheet(item.orderUuid)">
+						<li>
+						<p v-html="item.orderNumber"></p>
+						<p v-html="item.createTime"></p>
+						</li>
+						<li>{{item.customerName}}</li>
+						<el-tooltip class="item" effect="dark" :content="item.productName" placement="top-start" popper-class="tool_tip" v-if="item.productName.length > 18">
+							<li v-html="item.productName.length > 18 ? item.productName.substring(0,18) : item.productName"></li>
+						</el-tooltip>
+						
+						<li v-html="item.productName.length > 18 ? item.productName.substring(0,18) : item.productName" v-else></li>
+						
+						<el-tooltip class="item" effect="dark" :content="item.productModel" placement="top-start" popper-class="tool_tip" v-if="item.productModel.length > 18">
+							<li v-html="item.productModel.length > 18 ? item.productModel.substring(0,18) : item.productModel"></li>
+						</el-tooltip>
+						<li v-html="item.productModel" v-else></li>
+						<li class="orderColor"><span v-bind:class="{color1:item.orderStatus==16,color2:item.orderStatus==17,color3:item.orderStatus==18,color4:item.orderStatus==19,color5:item.orderStatus==20}">{{item.orderStatusStr}}</span></li>
+					</ul>
+							<el-pagination
+									v-if="totals3!=0"
+									@current-change="handleCurrentChange3"
+									:current-page.sync="pageNum3"
+									:page-size="8"
+									layout="total, prev, pager, next"
+									:total="this.totals3">
+							</el-pagination>
+				</div>
+			</div>
+			<div class="clear"></div>
+		</div>
+	</div>
+	<script src="../static/ajaxPackage.js"></script>
+	<script src="../static/receiving.js"></script>
+	<script src="../static/timeStamp.js"></script>
+	<script src="../static/vue.js"></script>
+	<script src="../static/axios.min.js"></script>
+	<script src="../static/element-ui.js"></script>
+</body>
+</html>

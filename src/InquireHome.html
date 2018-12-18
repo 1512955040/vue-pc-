@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>工单管理</title>
+		<link rel="stylesheet" href="../static/element-ui.css" />
+		<link rel="stylesheet" href="../static/css/font-awesome.min.css"/>
+	</head>
+	<body>
+		<div id="page">
+			<div id="ConentPageLeft">
+				<div class="imglogo"></div>
+				<ul>
+					<li v-for="(title_index,index) in titleIndex" @click="changeTitle(index)"><i :class="{active:changeTitles ===index }"></i></li>
+				</ul>
+			</div>
+			<div id="ConentPageRight">
+				<div id="RightBackground"></div>
+				<div id="RightTitle">
+					<p class="di pageTilte">工单管理</p>
+					<ul class="pageLogo di">
+						<li><i></i></li>
+						<li><i></i></li>
+						<li><i></i></li>
+						<li><i></i></li>
+					</ul>
+					<div class="clear"></div>
+				</div>
+				<div id="RightConent">
+					<div id="RightNavMenu">
+						<el-row class="tac">
+							<el-col :span="12">
+							    <el-menu
+							      default-active="1-1"
+							      class="el-menu-vertical-demo"
+							      @open="handleOpen"
+							      @close="handleClose"
+							      @select="handleSelect"
+							      background-color="#e9f0f8"
+							      text-color="#555958"
+      							  active-text-color="#186dbe" 
+							    >
+							    <el-submenu index="1">
+							        <template slot="title">
+							          <span style="display: inline-block;width: 100%;height: 56px;" id="t1">工单视图</span>
+							        </template>
+							        <el-menu-item-group id='tt1'>
+							          <el-menu-item index="1-1">
+							          	<span class="arrow0">待处理的工单</span>
+							          	<span class="arrow" v-html="this.workOlderNum.total"></span>
+							          </el-menu-item>
+							         
+							          <el-menu-item index="1-2">
+							          	<span class="arrow0">今日新建工单</span>
+							          	<span class="arrow" v-html="this.workOlderNum.todayNew"></span>
+							          </el-menu-item>
+							          <!--<el-menu-item index="1-4">
+							          	<span class="arrow0">待受理的工单</span>
+							          	<span class="arrow" v-html="this.workOlderNum.waitAccept"></span>
+							          </el-menu-item>-->
+							          <el-menu-item index="1-3">
+							          	<span class="arrow0">待派工的工单</span>
+							          	<span class="arrow" v-html="this.workOlderNum.waitDispatch"></span>
+							          </el-menu-item>
+							          <el-menu-item index="1-4">
+							          	<span class="arrow0">待回单的工单</span>
+							          	<span class="arrow" v-html="this.workOlderNum.waitReport"></span>
+							          </el-menu-item>
+							          <el-menu-item index="1-5">
+							          	<span class="arrow0">待审核的工单</span>
+							          	<span class="arrow" v-html="this.workOlderNum.waitCheck"></span>
+							          </el-menu-item>
+							          <el-menu-item index="1-6">
+							          	<span class="arrow0">待关闭的工单</span>
+							          	<span class="arrow" v-html="this.workOlderNum.waitClose"></span>
+							          </el-menu-item>
+							          <el-menu-item index="1-7">
+							          	<span class="arrow0">已关闭的工单</span>
+							          	<span class="arrow" v-html="this.workOlderNum.closed"></span>
+							          </el-menu-item>
+							           <el-menu-item index="1-8">
+							          	<span class="arrow0">今日已关闭工单</span>
+							          	<span class="arrow" v-html="this.workOlderNum.todayClose"></span>
+							          </el-menu-item>
+							          <!--<el-menu-item index="1-10">
+							          	<span class="arrow0">已取消的工单</span>
+							          	<span class="arrow" v-html="this.workOlderNum.canceled"></span>
+							          </el-menu-item>
+							          <el-menu-item index="1-11">
+							          	<span class="arrow0">异常的工单</span>
+							          	<span class="arrow" v-html="this.workOlderNum.errerOrder"></span>
+							          </el-menu-item>-->
+							        </el-menu-item-group>
+							    </el-submenu>
+							    <el-submenu index="2">
+							        <template slot="title">
+							          <span style="display: inline-block;width: 100%;height: 56px;" id="t2">工单回访</span>
+							        </template>
+							        <el-menu-item-group id='tt2'>
+							          <el-menu-item index="2-1">
+							          	<span class="arrow0">今日完成工单</span>
+							          </el-menu-item>
+							          <el-menu-item index="2-2">
+							          	<span class="arrow0">前一日完成工单</span>
+							          </el-menu-item>
+							          <el-menu-item index="2-3">
+							          	<span class="arrow0">前七日完成工单</span>
+							          </el-menu-item>
+							          <!--<el-menu-item index="2-4">选项4</el-menu-item>-->
+							        </el-menu-item-group>
+							    </el-submenu>
+							    <!--<span class="SystemSetup" id="t3">待回访的工单</span>-->
+							   </el-menu>
+							  </el-col>
+							</el-row>
+						</div>
+						<div id="RightForm">
+							<div class="RightFormSearch">
+								<button class="RightFormBtn" @click="create_news">
+									<i class="fa fa-plus" aria-hidden="true"></i> 
+									<span>新建工单</span>
+								</button>
+								<!--<button class="RightFormBtn1">筛  选</button>-->
+								<input type="text" placeholder="请输入人工编号/客户名称/联系电话" v-model="customer_info"/>
+								<button class="RightFormBtn2" @click="inquiry_this">查&nbsp;&nbsp;&nbsp;&nbsp;询</button>
+							</div>
+							<div class="RightFormConent">
+								<ul class="RightFormConent_title">
+									<li>工单编号及创建时间</li>
+									<li>客户名称</li>
+									<li>产品名称</li>
+									<li>产品型号</li>
+									<li>委派部门</li>
+									<li>工单状态</li>
+									<div class="clear"></div>
+								</ul>
+								<ul class="RightFormConent_Content" v-for="(EveryList,index) in manageList" @click="Worksheet(EveryList.orderUuid)">
+									<li>
+										<p v-html="EveryList.orderNumber"></p>
+										<p v-html="EveryList.createTime"></p>
+									</li>
+									<!--客户名称-->
+									<el-tooltip class="item" effect="dark" :content="EveryList.productName" placement="top-start" popper-class="tool_tip" v-if="EveryList.customerName.length > 14">
+										<li v-if="EveryList.customerName.length > 14">
+											<div class="conent_inline" v-html="EveryList.customerName"></div>
+										</li>
+									</el-tooltip>
+									<li v-if="EveryList.customerName.length <= 14">
+										<div class="conent_inline" v-html="EveryList.customerName"></div>
+									</li>
+									<!--产品名称-->
+									<el-tooltip class="item" effect="dark" :content="EveryList.productName" placement="top-start" popper-class="tool_tip" v-if="EveryList.productName.length > 24">
+										<li v-if="EveryList.productName.length > 24">
+											<div class="conent_inline" v-html="EveryList.productName"></div>
+										</li>
+									</el-tooltip>
+									<li v-if="EveryList.productName.length <= 24">
+										<div class="conent_inline" v-html="EveryList.productName"></div>
+									</li>
+									<!--产品型号-->
+									<el-tooltip class="item" effect="dark" :content="EveryList.productModel" placement="top-start" popper-class="tool_tip" v-if="EveryList.productModel.length > 22">
+										<li v-if="EveryList.productModel.length > 22">
+											<div class="conent_inline" v-html="EveryList.productModel"></div>
+										</li>
+									</el-tooltip>
+									<li v-if="EveryList.productModel.length <= 22">
+										<div class="conent_inline" v-html="EveryList.productModel"></div>
+									</li>
+									<!--委派部门-->
+									<el-tooltip class="item" effect="dark" :content="EveryList.departmentName" placement="top-start" popper-class="tool_tip" v-if="EveryList.departmentName.length > 12">
+										<li v-if="EveryList.departmentName.length > 12">
+											<div class="conent_inline" v-html="EveryList.departmentName"></div>
+										</li>
+									</el-tooltip>
+									<li v-if="EveryList.departmentName.length <= 12">
+										<div class="conent_inline" v-html="EveryList.departmentName"></div>
+									</li>
+									<!--工单状态-->
+									<li>
+										<span class="workingCondition" :class="{color1:EveryList.orderStatus==16,color2:EveryList.orderStatus==17,color3:EveryList.orderStatus==18,color4:EveryList.orderStatus==19,color5:EveryList.orderStatus==20}" v-html="EveryList.orderStatusStr"></span>
+									</li>
+									
+									<div class="clear"></div>
+								</ul>
+							</div>
+							<!--分页-->
+							<div class="RightFormConent_Bottom block">
+							    <el-pagination
+							      	@current-change="handleCurrentChange"
+							      	:current-page.sync="currentPage1"
+							      	:page-size="8"
+							      	layout="total, prev, pager, next"
+							      	:total="this.totals">
+    							</el-pagination>
+  							</div>
+						</div>
+						<div class="clear"></div>
+					</div>
+				</div>
+				<div class="clear"></div>
+				<!--点击新建弹出框-->
+				<div id="PopNew">
+					<el-dialog
+  					title="新建工单"
+  					:visible.sync="dialogVisible"
+  					width="680px">
+  						<el-form :model="numberValidateForm" ref="numberValidateForm" label-width="100px" class="demo-ruleForm" status-icon >
+  							<div class="btn_SearchConent">
+								<div class="load_Search" ref="userInfon">
+									<input type="text" @focus="user_Search" v-model="numberValidateForm.customerName" placeholder="请输入客户名称/联系电话搜索(必选)" />
+									<button id="btn_Searchbtns"  @click="btn_Searchbtn">查&nbsp;&nbsp;&nbsp;&nbsp;询</button>
+									<div v-if="shown" class="user-info" id="view_height">
+										<ul class="user-items">
+											<li id='CreateNewMan' @click="CreateNewMan"><i class="fa fa-user" aria-hidden="true"></i> 新建客户</li>
+											<li v-for="(aaa,index) in datasn" @click="checkCustomer(index,aaa.id,aaa.customerUuid)" style="cursor: pointer;"><span class="customerName">{{aaa.name}}</span><span class="customerPhone">{{aaa.phone}}</span></li>
+											<div class='recode'>{{"共搜索到"+this.valueLength+"条记录"}}</div>
+											<div class="clear"></div>
+										</ul>
+									</div>
+								</div>
+							</div>
+							<div class="selected_produce">
+								<!--产品类别-->
+									<el-select v-model="value7" placeholder="请选择产品类别(必选)" popper-class="my-autocomplete0" @focus="group_produce" @change="check_Produce">
+								    	<el-option-group
+								      		v-for="group in options3"
+								      		:key="group.label"
+								      		:label="group.label">
+								      		<el-option
+								        		v-for="(item,index) in group.options"
+								        		:key="index"
+								        		:label="item.name"
+								        		:value="item.id">
+								      		</el-option>
+					    				</el-option-group>
+  									</el-select>
+  									<!--产品-->
+  									<el-select v-model="value6" placeholder="请选择产品(必选)" popper-class="my-autocomplete1" @focus="group_products" @change="check_Products">
+								    	<el-option-group
+								      		v-for="group in options4"
+								      		:key="group.label"
+								      		:label="group.label">
+								      		<el-option
+								        		v-for="item in group.options"
+								        		:key="item.value"
+								        		:label="item.name"
+								        		:value="item.id">
+								      		</el-option>
+					    				</el-option-group>
+  									</el-select>
+  									<!--产品型号-->
+									<!--<el-select v-model="numberValidateForm.productModel" placeholder="请选择型号" popper-class="my-autocomplete3">
+								    	<el-option-group
+								      		v-for="group in options8"
+								      		:key="group.label"
+								      		:label="group.label">
+								      		<el-option
+								        		v-for="(item,index) in group.options"
+								        		:key="index"
+								        		:label="item.name"
+								        		:value="item.id">
+								      		</el-option>
+					    				</el-option-group>
+  									</el-select>-->
+  									<!--产品型号-->
+  									<el-form-item label="" prop="productModel">
+  										<div :class="{'insIf6':this.zIndex6}" class="inputsDiv6">产品型号</div>
+    									<el-input  v-model="numberValidateForm.productModel" :placeholder="holder6" auto-complete="off"  disabled="disabled" popper-class="my-padding"></el-input>
+  									</el-form-item>
+  									<!--部门-->
+  									<el-select v-model="numberValidateForm.organizeId" placeholder="请选择工单处理部门(必选)" popper-class="my-autocomplete3" @focus="group_department">
+								    	<el-option-group
+								      		v-for="group in options9"
+								      		:key="group.label"
+								      		:label="group.label">
+								      		<el-option
+								        		v-for="(item,index) in group.options"
+								        		:key="index"
+								        		:label="item.name"
+								        		:value="item.organizeId">
+								      		</el-option>
+					    				</el-option-group>
+  									</el-select>
+  									
+  									<!--服务请求-->
+  									<el-input 
+  										class="my-textarea"
+  										type="textarea"
+  										:rows="7"
+  										placeholder="请输入服务请求(问题描述500个字以内)"
+  										v-model="numberValidateForm.serviceRequest">
+									</el-input>
+									<!--SLA类型-->
+									<!--<el-select v-model="value9" placeholder="SLA类型(必选)" popper-class="my-autocomplete3" @focus="group_sla" @change="sla_Id">
+								    	<el-option-group
+								      		v-for="group in options6"
+								      		:key="group.label"
+								      		:label="group.label">
+								      		<el-option
+								        		v-for="(item,index) in group.options"
+								        		:key="index"
+								        		:label="item.name"
+								        		:value="item.id">
+								      		</el-option>
+					    				</el-option-group>
+  										</el-select>-->
+  									<!--优先级-->
+									<!--<div class="priority_level">
+										<span>优先级:</span>
+										<ul>
+											<li v-for="(energencyActive,index) in emergency" @click="changes(index)"><i :class="{'active':changeActive == index,'removeActive':changeActive !== index}"></i> {{energencyActive.value}}</li>
+											<div class="clear"></div>
+										</ul>
+									</div>-->
+									<!--紧急程度-->
+									<div class="priority_level0">
+										<span>紧急程度:</span>
+										<ul>
+											<li v-for="(urgencyActive,index) in urgency" @click="changes0(urgencyActive.id)"><i :class="{'active':numberValidateForm.emergency == urgencyActive.id,'removeActive':numberValidateForm.emergency !== urgencyActive.id}"></i> {{urgencyActive.value}}</li>
+											<div class="clear"></div>
+										</ul>
+									</div>
+									<!--联系人-->
+									<el-select v-model="numberValidateForm.contactName" placeholder="请选择联系人(必选)" popper-class="my-autocomplete2" @focus="group_customer" @change="check_Customer">
+								    	<el-option-group
+								      		v-for="group in options5"
+								      		:key="group.label"
+								      		:label="group.label">
+								      		<el-option
+								        		v-for="(item,index) in group.options"
+								        		:key="item.id"
+								        		:label="item.name"
+								        		:value="item.name"
+								        		>
+								      		</el-option>
+					    				</el-option-group>
+  									</el-select>
+  									<!--渠道-->
+  									<el-form-item label="" prop="channel">
+  										<div :class="{'insIf5':this.zIndex5}" class="inputsDiv5">渠道</div>
+    									<el-input  v-model="numberValidateForm.channel" auto-complete="off" :placeholder='holder5' @focus="validatePass6" @blur="group_channel" popper-class="my-padding"></el-input>
+  									</el-form-item>
+  									<!--手机号-->
+  									<el-form-item label="" prop="customerPhone">
+  										<div :class="{'insIf1':this.zIndex1}" class="inputsDiv1">手机号</div>
+    									<el-input  v-model="numberValidateForm.customerPhone" auto-complete="off" :placeholder='holder1' disabled="disabled" popper-class="my-padding"></el-input>
+  									</el-form-item>
+							</div>
+						</el-form>
+						<div id="FormBottom"></div>
+	  					<span slot="footer" class="dialog-footer dialog-footer0">
+	    					<el-button @click="dialogVisible = false">取&nbsp;&nbsp;&nbsp;&nbsp;消</el-button>
+	    					<el-button type="primary" @click="submitForm2('numberValidateForm')">直接解决</el-button>
+	    					<el-button type="primary" @click="submitForm('numberValidateForm')">创建工单</el-button>
+	  					</span>
+					</el-dialog>
+				</div>
+				<!--新建客户弹窗-->
+				<div id="PopNewMan">
+					<el-dialog
+  					title="新建客户"
+  					:visible.sync="dialogVisible1"
+  					width="460px">
+  						<el-form :model="numberValidateForm1" ref="numberValidateForm1" label-width="100px" class="demo-ruleForm" status-icon :rules="rules3">
+  							<div class="Form_Create_Customer">
+  								<el-form-item label="" prop="name">
+					 				<div :class="{insIf:this.zIndex}" class="inputsDiv">客户名称(必填)</div>
+    								<el-input  v-model="numberValidateForm1.name" auto-complete="off" :placeholder='holder' @focus="validatePass0"></el-input>
+  								</el-form-item>
+  								<el-form-item label="" prop="contact">
+					 				<div :class="{insIf2:this.zIndex2}" class="inputsDiv2">联系人(必填)</div>
+    								<el-input  v-model="numberValidateForm1.contact" auto-complete="off" :placeholder='holder2' @focus="validatePass3"></el-input>
+  								</el-form-item>
+  								<el-form-item label="" prop="phone">
+  									<div :class="{insIf3:this.zIndex3}" class="inputsDiv3">手机号(必填)</div>
+    								<el-input  v-model="numberValidateForm1.phone" auto-complete="off" :placeholder='holder3' @focus="validatePass4"></el-input>
+  								</el-form-item>
+  								<el-form-item label="" prop="email">
+  									<div :class="{insIf4:this.zIndex4}" class="inputsDiv4">客户邮箱</div>
+    								<el-input  v-model="numberValidateForm1.email" auto-complete="off" :placeholder='holder4' @focus="validatePass5"></el-input>
+  								</el-form-item>
+  								
+  								<div class="customer_title">
+  									<p>客户标签</p>
+  									<ul>
+  										<li v-for="(customerVIP,index) in customer_Label" @click="change_title(customerVIP.id)"><span><i :class="{'active_right':numberValidateForm1.label == customerVIP.id }"></i></span> {{customerVIP.value}}</li>
+  										<div class="clear"></div>
+  									</ul>
+  									<div class="clear"></div>
+  								</div>
+  								
+  								<div class="customer_save">
+  									<p>所属区域</p>
+  									<!--省show =!show-->
+  									<div id="login" ref="userInfo">
+										<div id="el-appSelect" @click="el_appselect" >
+											<span>{{this.numberValidateForm1.province ===''?'省份':this.numberValidateForm1.province}}</span>
+											<i :class="{'acrac':!this.show,'actives':this.show}"></i>
+										</div>
+										<div v-if="show" class="user-infos">
+											<div>
+												<input type="text" class="typesinput" v-model="v"/>
+												<i class="bigSotre"></i>
+											</div>
+											<ul class="user-item">
+												<li v-for="(aaa,index) in datas" @click="capital(index,aaa.id)" style="cursor: pointer;">{{aaa.name}}</li>
+												<li v-if="datas.length<=0" style="text-align: center;font-size: 14px;">无数据</li>
+											</ul>
+										</div>
+									</div>
+									<!--市shows =!shows-->
+									<div id="city" ref="userInfos">
+										<div id="el-appSelect0" @click="el_appSelect0">
+											<span>{{this.numberValidateForm1.city ===''?'城市':this.numberValidateForm1.city}}</span>
+											<i :class="{'acrac0':!this.shows,'actives0':this.shows}"></i>
+										</div>
+										<div v-if="shows" class="user-infos0">
+											<div>
+												<input type="text" class="typesinput0" v-model="v0"/>
+												<i class="bigSotre0"></i>
+											</div>
+											<ul class="user-item0">
+												<li v-for="(aaa,index) in datas0" @click="citys(index,aaa.id)" style="cursor: pointer;">{{aaa.name}}</li>
+												<li v-if="datas0.length<=0" style="text-align: center;font-size: 14px;">无数据</li>
+											</ul>
+										</div>
+									</div>
+									<!--区showss =!showss-->
+									<div id="county" ref="userInfoss">
+										<div id="el-appSelect1" @click="el_appSelect1" >
+											<span>{{this.numberValidateForm1.county ===''?'区县':this.numberValidateForm1.county}}</span>
+											<i :class="{'acrac1':!this.showss,'actives1':this.showss}"></i>
+										</div>
+										<div v-if="showss" class="user-infos1">
+											<div>
+												<input type="text" class="typesinput1" v-model="v1"/>
+												<i class="bigSotre1"></i>
+											</div>
+											<ul class="user-item1">
+												<li v-for="(aaa,index) in datas1" @click="countys(index,aaa.id)" style="cursor: pointer;">{{aaa.name}}</li>
+												<li v-if="datas1.length<=0" style="text-align: center;font-size: 14px;">无数据</li>
+											</ul>
+										</div>
+									</div>
+  								</div>
+  								<el-form-item label="" prop="address">
+  									<el-input
+  										type="textarea"
+  										:rows="5"
+  										placeholder="详细地址信息"
+  										v-model="numberValidateForm1.address">
+									</el-input>
+								</el-form-item>
+  							</div>
+  						</el-form>
+  						<div class="FormBottoms"></div>
+  						<span slot="footer" class="dialog-footer dialog-footer2">
+	    					<el-button @click="Cancellation">取&nbsp;&nbsp;&nbsp;&nbsp;消</el-button>
+	    					<el-button type="primary" @click="submitForm0('numberValidateForm1')">确&nbsp;&nbsp;&nbsp;&nbsp;定</el-button>
+	  					</span>
+					</el-dialog>
+				</div>
+				<!--填写回单弹窗-->
+				
+				<div id="PopNewMann">
+					<el-dialog
+  					title="填写回单"
+  					:visible.sync="dialogVisible5"
+  					width="460px">
+  						<el-form :model="numberValidateForm2" ref="numberValidateForm2" label-width="100px" class="demo-ruleForm" status-icon :rules="rules5">
+									<el-form-item  prop="">
+										<!--<div :class="{'insIf6':this.zIndex6}" class="inputsDiv6">产品类别</div>-->
+    									<el-input placeholder="产品类别" auto-complete="off" v-model="numberValidateForm2.values0"  disabled="disabled" popper-class="my-padding"></el-input>
+									</el-form-item>
+									<el-form-item  prop="">
+										<el-input  placeholder="产品名称" auto-complete="off"  disabled="disabled" v-model="numberValidateForm2.values1" popper-class="my-padding"></el-input>
+									</el-form-item>
+									<el-form-item  prop="">
+										<el-input placeholder="请输入产品序列号" size="large" v-model="numberValidateForm2.values2"></el-input>
+									</el-form-item>
+									<el-form-item>
+											<el-select v-model="numberValidateForm2.stateValue" placeholder="请输入在保状态">
+												<el-option  v-for="item in options11":key="item.value" :label="item.label" :value="item.value"></el-option>
+											</el-select>
+									</el-form-item>
+									<el-form-item >
+										<el-select v-model="numberValidateForm2.faultValue" placeholder="请选择故障类别" @focus="faultClick">
+											<el-option-group
+								      		v-for="group in options10"
+								      		:key="group.label"
+								      		:label="group.label">
+									      		<el-option
+									        		v-for="(item,index) in group.options"
+									        		:key="index"
+									        		:label="item.name"
+									        		:value="item.name">
+									      		</el-option>
+					    					</el-option-group>
+										</el-select>
+									</el-form-item>
+									<el-form-item  prop="">
+										<el-input type="textarea" :rows="2" placeholder="请输入处理信息" v-model="numberValidateForm2.values3"></el-input>
+									</el-form-item>
+									<el-form-item class="uploadDiv">
+										<span style="font-size: 16px;">相关图片</span>
+										<el-upload
+											action="/uploadFile"
+											list-type="picture-card"
+											:limit="10"
+											:on-success="uploadFileSuccess"
+											:on-preview="handlePictureCardPreview"
+											:on-remove="handleRemove">
+											<i class="el-icon-plus"></i>
+										</el-upload>
+										<el-dialog :visible.sync="dialogVisible3">
+											<img width="100%" :src="dialogImageUrl" alt="">
+										</el-dialog>
+									</el-form-item>
+									
+									<el-form-item>
+										<el-input type="textarea" :rows="2" placeholder="备注"  v-model="numberValidateForm2.values4"></el-input>
+									</el-form-item>
+							</el-form>
+							<div class="FormBottoms"></div>
+							<span slot="footer" class="dialog-footer">
+								<el-button @click="dialogVisible5 = false">取&nbsp;&nbsp;&nbsp;&nbsp;消</el-button>
+								<el-button type="primary" class="agreeBtn" @click="submitForm5('numberValidateForm2')">确&nbsp;&nbsp;&nbsp;&nbsp;定</el-button>
+							</span>
+						</el-dialog>
+  						
+				</div>
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+			</div>
+			<script type="text/javascript" src="../static/vue.js" ></script>
+			<script type="text/javascript" src="../static/element-ui.js" ></script>
+			<script type="text/javascript" src="../static/axios.min.js" ></script>
+			<script type="text/javascript" src="../static/timeStamp.js" ></script>
+	</body>
+	<script type="text/javascript">
+		
+	</script>
+</html>

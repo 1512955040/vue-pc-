@@ -1,0 +1,34 @@
+require("../CSS/normalize.css")
+require("../CSS/homePage.css");
+var app=new Vue({
+	el:'#body',
+	data:{
+		navs:[
+			{label:'首页'},
+			{label:'下载'},
+			{label:'关于'}
+		],
+		isActive:0,
+		phone:'',
+		password:'',
+		phone1:"",
+		password1:''
+	},
+	methods:{
+		bckClick(n){
+			this.isActive=n;
+		},
+		loginClick(){
+			window.location.href="login.html"
+		},
+		RegClick(){
+			window.location.href="Registration.html"
+		},
+		regMissWord(){
+			window.location.href="Registration.html?phone="+this.phone+"&password="+this.password;
+		},
+		regMissWord1(){
+			window.location.href="Registration.html?phone="+this.phone1+"&password="+this.password1;
+		}
+	}
+})

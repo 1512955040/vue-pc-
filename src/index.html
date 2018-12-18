@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>首页</title>
+	<link rel="stylesheet" href="../static/element-ui.css">
+
+	<script src="../static/vue.js"></script>
+	<script src="../static/element-ui.js"></script>
+	
+</head>
+<body>
+	<div id="body">
+		<div id="modelLinear">
+		<nav id="nav">
+			<div id="navinner">
+				<div id="navbar">
+					<div id="logo"></div>
+					<ul>
+						<li v-for="(item,index) in  navs"><a href="#" v-bind:class="{active:isActive==index}" @click="bckClick(index)">{{item.label}}</a></li>
+					</ul>
+					<div id="btnDiv">
+						<el-button type="primary" class="el-button1" @click="loginClick()">登&nbsp;&nbsp;&nbsp;&nbsp;录</el-button>
+						<el-button type="primary" class="el-button1" @click="RegClick()">注册账号</el-button>
+					</div>
+				</div>
+				<ul id="intrduct">
+					<li><span id="logoSpan">云维</span>&nbsp;&nbsp;客户服务质量评估系统</li>
+					<li>思维·技术·理念&nbsp;&nbsp;&nbsp;体验高效办公，享受品质服务</li>
+					<li>
+						<input type="text" v-model="phone" placeholder="邮箱/手机号">
+						<input type="text" v-model="password" placeholder="密码">
+						<el-button type="primary" class="el-button2" @click="regMissWord()">创建账号</el-button>
+					</li>
+				</ul>
+			</div>
+		</nav>
+		<div id="sectionOutDiv">
+		<section>
+			<ul>
+				<li>简单、强大、可靠</li>
+				<li>云维，让您体验高效的客户服务评估系统</li>
+			</ul>
+			<table>
+				<tbody>
+					<tr>
+						<td>
+							<ul>
+								<li>
+									任务预警
+								</li>
+								<li>
+									<img src="imgs/workOrder/预警.png" alt="">
+								</li>
+								<li>
+									基于时间与工单相结合的调度策略，对工单的实时状态进行监测预警，使运作更高效。
+								</li>
+							</ul>
+						</td>
+						<td>
+							<ul>
+								<li>
+									SLA
+								</li>
+								<li>
+									<img src="imgs/workOrder/logoSLA.png" alt="">
+								</li>
+								<li>
+									专业化和标准化的服务，实现由提供无差异服务，到满足高端客户个性化需求的转变。
+
+								</li>
+							</ul>
+						</td>
+						<td>
+							<ul>
+								<li>
+									统计分析
+								</li>
+								<li>
+									<img src="imgs/workOrder/统计.png" alt="">
+								</li>
+								<li>
+									层次分明的图形化统计，多维度的数据挖掘分析，为企业提高服务质量提供数据支持。
+
+
+								</li>
+							</ul>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<ul>
+								<li>
+									产品管理
+
+								</li>
+								<li>
+									<img src="imgs/workOrder/产品管理.png" alt="">
+								</li>
+								<li>
+									合理科学的产品分类, 简单细致的产品归纳，有效的管理好各项产品，扩展售后资源。
+
+								</li>
+							</ul>
+						</td>
+						<td>
+							<ul>
+								<li>
+									合同管理
+								</li>
+								<li>
+									<img src="imgs/workOrder/合同管理.png" alt="">
+								</li>
+								<li>
+									标准化管理和个性化管理的有机结合,规范基础数据,统一储存管理,提高管理效率
+
+								</li>
+							</ul>
+						</td>
+						<td>
+							<ul>
+								<li>
+									客户管理
+								</li>
+								<li>
+									<img src="imgs/workOrder/管理者.png" alt="">
+								</li>
+								<li>
+									实时跟踪最近服务客户,查看管理客户档案和产品档案,保障公司与客户之间的关系
+
+								</li>
+							</ul>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<ul>
+								<li>
+									角色管理
+								</li>
+								<li>
+									<img src="imgs/workOrder/客户管理.png" alt="">
+								</li>
+								<li>
+									分项管理客服、客服经理、运维工程师、运维经理等账号,专人专享,提高工作效率
+
+								</li>
+							</ul>
+						</td>
+						<td>
+							<ul>
+								<li>
+									工单管理
+								</li>
+								<li>
+									<img src="imgs/workOrder/在线工单.png" alt="">
+								</li>
+								<li>
+									企业内部与服务高效协同,便捷化流程,彻底解决服务效率低、及时性差的问题。
+
+								</li>
+							</ul>
+						</td>
+						<td>
+							<ul>
+								<li>
+									组织管理
+								</li>
+								<li>
+									<img src="imgs/workOrder/组织架构.png" alt="">
+								</li>
+								<li>
+									从上至下、增加垂直方向层次的组织单元，直观形象的表现组织单元之间的相互关联。
+								</li>
+							</ul>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</section>
+		</div>
+		<div id="loginThr">
+			<ul>
+				<li style="font-size:22px;">开始使用云维!</li>
+				<li>
+					<input type="text" v-model="phone1" placeholder="手机号">
+					<input type="text" v-model="password1" placeholder="密码">
+					<el-button type="primary" class="el-button2" @click="regMissWord1()">创建账号</el-button>
+				</li>
+			</ul>
+		</div>
+		</div>
+		<div id="loginFour">
+			
+			<div style="text-align:center;font-size: 30px;margin-top:40px;margin-bottom:30px">
+				云维，开启云端新时代
+			</div>
+		
+			<div style="border:1px solid #CACACA;margin-bottom:30px;"></div>
+			<table>
+				<tr>
+					<td>关于我们</td>
+					<td>新闻动态</td>
+					<td>SLA</td>
+					<td>意见反馈</td>
+				</tr>
+				<tr>
+					<td>联系我们</td>
+					<td>服务条款</td>
+					<td>公司</td>
+					<td>帮助中心</td>
+				</tr>
+			</table>
+			<div style="margin-top:140px;text-align: center;font-size: 18px;">
+				Copyright©2018北京库特科技有限公司All Rights Reserved.京ICP备88888888号
+			</div>
+		</div>
+	</div>
+</body>
+</html>

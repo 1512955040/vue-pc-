@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>注册跳转</title>
+		<link rel="stylesheet" href="../static/element-ui.css" />
+	</head>
+	<body>
+		<div id="skipLogin">
+			<div class="title-top" >
+				<div class="title-top-one">
+					<i class="title-top-one-logo"></i>
+				</div>
+				<div class="title-top-two">
+					<span class="title-top-two-radir">我已注册, 马上<span class="login"><a href="index.html">登录</a></span></span>
+				</div>
+			</div>
+			<div class="form-control">
+				<p class="form-control-p">企业注册</p>
+				<div class="form-control-regist">
+					<div class="form-control-title">
+						<img src="imgs/login/blueRight.gif" />
+						<span>注册成功</span>
+					</div>
+					<div class="form-control-conent">
+						<span>您的手机号{{phone}}成功注册运维账户</span>
+						<span class="title-color" @click="Goinit">立刻进入</span>
+					</div>
+					<div class="form-control-conent1">
+						<span>页面将在<span>{{totaltime}}</span>秒后自动跳转</span>
+					</div>
+				</div>
+			</div>
+			<div class="bottom-title">
+					<ul class="bottom-title-ul">
+						<li><a href="./bottomhtml/aboutUs.html">关于我们</a> |</li>
+						<li><a href="./bottomhtml/callUs.html">联系我们</a> |</li>
+						<li><a href="./bottomhtml/joinUs.html">加入我们</a> |</li>
+						<li><a href="./bottomhtml/feedBack.html">意见反馈</a> |</li>
+						<li><a href="./bottomhtml/news.html">新闻动态</a> |</li>
+						<li><a href="./bottomhtml/helpCenter.html">帮助中心</a> |</li>
+						<li><a href="./bottomhtml/service.html">服务条款</a></li>
+					</ul>
+					<p class="bottom-title-p">
+						Copyright © 2018 云维 保留所有权利 / 京ICP备88888888号
+					</p>
+			</div>
+		</div>
+		<script type="text/javascript" src="../static/vue.js"></script>
+		<script type="text/javascript" src="../static/element-ui.js" ></script>
+		<script type="text/javascript" src="../static/receiving.js" ></script>
+	</body>
+	<script>
+		var skipLogin=new Vue({
+			el:"#skipLogin",
+			data(){
+				return{
+					totaltime:3,
+					phone:''
+				}
+			},
+			created(){
+				this.getPhoneUrl()
+				this.TimerCreated()
+			},
+			methods:{
+				getPhoneUrl:function(){
+					var dataUrl=getUrlParms("phone")
+					this.phone=dataUrl
+				},
+				//倒计时
+				TimerCreated:function(){
+					let clock =window.setInterval(()=>{
+						this.totaltime--
+						if(this.totaltime<=0){
+							window.location.href="https:www.baidu.com";
+							clearInterval(clock)
+						}
+					},1000)
+				},
+				Goinit:function(){
+					window.location.href="https://www.baidu.com"
+				}
+			}
+		})
+	</script>
+</html>

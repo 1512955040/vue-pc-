@@ -1,0 +1,216 @@
+
+		*{
+			margin: 0;
+			padding: 0;
+		}
+		html{
+			width:100%;
+			height: 100%;
+		}
+		body{
+			width: 100%;
+			height: 100%;
+			font-family: "微软雅黑";
+			min-width:1201px;
+			border-bottom: 0px;
+		}
+		
+		
+			.di{
+				display: inline-block;
+			}
+			.fl{
+				float: right;
+			}
+			.fr{
+				float: right;
+			}
+			.clear{
+				clear: both;
+			}
+			#body{
+				margin: 0 auto;
+				width: 1201px;
+				height: 100%;
+			}
+			ul li{
+				list-style: none;
+			}
+			#ConentPageLeft{
+				width: 110px;
+				min-height: 100%;
+				/*min-height: 768px;*/
+				background:#1867b6;
+				text-align: center;
+				float: left;
+			}
+			#ConentPageLeft .imglogo,
+			#ConentPageLeft ul li:nth-child(1)  i,
+			#ConentPageLeft ul li:nth-child(2)  i,
+			#ConentPageLeft ul li:nth-child(3)  i,
+			#ConentPageLeft ul li:nth-child(4)  i,
+			#ConentPageLeft ul li:nth-child(1)  i.active,
+			#ConentPageLeft ul li:nth-child(2)  i.active,
+			#ConentPageLeft ul li:nth-child(3)  i.active,
+			#ConentPageLeft ul li:nth-child(4)  i.active,
+			#RightTitle ul li i,
+			.priority_level ul li i.active,
+			.Check_Form_Title .Check_out,
+			i.active_right{
+				display: inline-block;
+				background: url("../imgs/workOrder/workorder.png") no-repeat;
+				vertical-align: middle;
+				cursor: pointer;
+			}
+			#ConentPageLeft .imglogo{
+				background-position: -355px -121px;
+				width: 52px;
+				height: 63px;
+				margin-top: 30px;
+			}
+			#ConentPageLeft ul{
+				margin-top: 60px;
+			}
+			#ConentPageLeft ul li:nth-child(2),
+			#ConentPageLeft ul li:nth-child(4){
+				margin-top:40px;
+			}
+			#ConentPageLeft ul li:nth-child(3){
+				margin-top:42px;
+			}
+			#ConentPageLeft ul li:nth-child(1)  i{
+				background-position: -436px -122px;
+				width: 66px;
+				height: 63px;
+			}
+			#ConentPageLeft ul li:nth-child(2)  i{
+				background-position: -526px -119px;
+				width: 66px;
+				height: 66px;
+			}
+			#ConentPageLeft ul li:nth-child(3)  i{
+				background-position: -606px -119px;
+				width: 66px;
+				height: 66px;
+			}
+			#ConentPageLeft ul li:nth-child(4)  i{
+				background-position: -692px -119px;
+				width: 66px;
+				height: 66px;
+			}
+			#ConentPageLeft ul li:nth-child(1)  i.active{
+				background-position: -436px -196px;
+				width: 66px;
+				height: 63px;
+			}
+			#ConentPageLeft ul li:nth-child(2)  i.active{
+				background-position: -526px -199px;
+				width: 66px;
+				height: 66px;
+			}
+			#ConentPageLeft ul li:nth-child(3)  i.active{
+				background-position: -606px -199px;
+				width: 66px;
+				height: 66px;
+			}
+			#ConentPageLeft ul li:nth-child(4)  i.active{
+				background-position: -692px -199px;
+				width: 66px;
+				height: 66px;
+			}
+			/*right*/
+			#ConentPageRight{
+				height:100%;
+				margin-left: 110px;
+			}
+			#RightBackground{
+				height: 6px;
+				background: linear-gradient(to right,#186dbe,#2e7dc8,#639ed6,#dde9f5 95%,#ffffff) no-repeat center;
+				background-size: 100% 100%;
+			}
+			#RightTitle{
+				height: 100px;
+				border-bottom: 1px solid #D9D9D9;
+				line-height: 100px;
+				box-sizing: border-box;
+			}
+			#RightTitle .pageTilte{
+				font-size: 36px;
+				padding-left: 60px;
+			}
+			/*几个小图标*/
+			#RightTitle .pageLogo{
+				float: right;
+			}
+			#RightTitle ul li{
+				display: inline-block;
+			}
+			#RightTitle ul li:nth-child(1) i{
+				width: 30px;
+				height: 36px;
+				background-position: -447px -283px;
+			}
+			#RightTitle ul li:nth-child(2) i{
+				width: 34px;
+				height: 36px;
+				margin-left: 30px;
+				background-position: -507px -283px;
+			}
+			#RightTitle ul li:nth-child(3) i{
+				width: 40px;
+				height: 27px;
+				margin-left: 31px;
+				background-position: -570px -286px;
+			}
+			#RightTitle ul li:nth-child(4) i{
+				width: 45px;
+				height: 37px;
+				margin-left: 29px;
+				background-position: -638px -283px;
+			}
+			#tabs{
+				width:100%;
+				height:71px;
+				border-bottom:1px solid #96BDE2;
+			}
+			#tabs li{
+				float:left;
+				width:102px;
+				height:60px;
+				text-align:center;
+				margin-top:11px;
+				line-height:60px;
+			}
+			#tabs li:first-child{
+				margin-left:60px;
+			}
+			#tabs li a{
+				display:block;
+				font-size:18px;
+			}
+			#tabs li a:hover{
+				cursor:pointer
+			}
+			.active{
+				color:#2F79C3;
+				background-color:#E9F0F8;
+				cursor: pointer;
+			}
+			#circle2,#circle4{
+				margin-left:100px;
+			}
+			#circle2>div,#circle2>div canvas{
+				display: inline-block;
+			}
+			#circle1,#circle3{
+				margin-left:50px;
+			}
+			#circle6,#circle8{
+				margin-left:100px;
+			}
+			#circle2>div,#circle2>div canvas{
+				display: inline-block;
+			}
+			#circle5,#circle7{
+				margin-left:50px;
+			}

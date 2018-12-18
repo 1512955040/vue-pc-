@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>工单管理</title>
+	<link rel="stylesheet" href="../static/element-ui.css">
+	<link rel="stylesheet" href="../static/css/font-awesome.min.css">
+</head>
+<body id="allBody">
+	<div id="body">
+		<div id="sidebar">
+			<div class="imglogo"></div>
+			<ul>
+				<li v-for="(title_index,index) in titleIndex" @click="changeTitle(index)"><i :class="{active:changeTitles ===index }"></i></li>
+			</ul>
+		</div>
+		<div id="content">
+			 <div id="linear-top"></div>
+			<div id="detailHead">
+				<p id="detailHeadP">工单管理</p>
+				<ul id="detailHeadUl">
+					<li class="firsLi"></li>
+					<li class="secLi"></li>
+					<li class="fa fa-bell-o thrLi">
+					</li>
+					<li id="dropDowm">
+						<ul id="dropDowmMenu">
+							<li><span>姓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;名</span><p v-html="information_options.name"></p></li>
+							<li><span>职&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;位</span><p v-html="information_options.positions"></p></li>
+							<li><span>部门名称</span><p v-html="information_options.departmentName"></p></li>
+							<li><span>手&nbsp;机&nbsp;号</span><p v-html="information_options.phone"></p></li>
+							<li><span>邮&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;箱</span><p v-html="information_options.email"></p></li>
+							<li style="text-align: right;"><el-button type="primary">退出登录</el-button></li>
+						</ul>
+					</li>
+					<div class="clear"></div>
+
+				</ul>
+				<div class="clear"></div>
+
+			</div>
+			
+			<div id="sideLeft">
+				<ul>
+					<li id="sideLeftLi">
+						<b>{{orderNumber}}</b>
+						<span :class="{color1:orderStatus==16,color2:orderStatus==17,color3:orderStatus==18,color4:orderStatus==19,color5:orderStatus==20}">{{orderStatusStr}}</span>
+					</li>
+					<li>
+						<ul id="firstUl">
+							<li><span>客户名称</span><p>{{customerName}}</p></li>
+							<li><span>产品类别</span><p>{{productType}}</p></li>
+							<li><span>产品名称</span><p>{{productName}}</p></li>
+							<li><span>产品型号</span><p>{{productModel}}</p></li>
+							<li><span>服务请求</span><p>{{serviceRequest}}</p></li>
+							<!-- <li><b>SLA类型 :</b>&nbsp;&nbsp;{{slaTypeName}}</li> -->
+							<!-- <li><b>优&nbsp; 先&nbsp;级 :</b>&nbsp;&nbsp;{{priorityStr}}</li> -->
+							<li><span>紧急程度</span><p>{{emergencyStr}}</p></li>
+							<li><span>联&nbsp; 系&nbsp;人</span><p>{{contactName}}</p></li>
+							<li><span>联系电话</span>
+							<p>{{customerPhone}}</p></li>
+							<li><span>委派部门</span><p v-html="this.departmentName"></p></li>
+						</ul>
+					</li>
+					<li id="sideLeft1">
+						<ul id="secUl">
+							<li><span>渠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;道</span><p>{{channel}}</p></li>
+							<!-- <li><b>工单类型 :</b>&nbsp;&nbsp;{{orderType}}</li> -->
+							<!-- <li><b>服务模式 :</b>&nbsp;&nbsp;{{channel}}</li> -->
+							<li><span>创建时间</span><p>{{createTime}}</p></li>
+						</ul>
+					</li>
+				</ul>
+			</div>
+			<div id="sideRight">
+					<ul id="tabs">
+						<li v-for="(item,index) in bckArr"><a  v-bind:class="{active:isActive==index}" v-on:click="bckClick(index)">{{item.label}}</a></li>
+					</ul>
+					<ul id="tabsRight">
+						<li>
+							<el-button plain class="backBtn" @click="backClick()">返&nbsp;&nbsp;&nbsp;&nbsp;回</el-button></li>
+						<li id="branch">
+							<el-button plain class="backBtn" v-if="backBtn1" @click="changeBranch()">修改部门</el-button>
+								<el-dialog
+								title="修改部门"
+								id="changeBranch"
+								:visible.sync="dialogVisibleBranch"
+								width="450px"
+								>
+								  <el-select v-model="valueBah" @focus="branchFoucs" placeholder="请选择部门" style="width:100%">
+										<el-option
+											v-for="branch in branchOptions"
+											:key=""
+											:label="branch.name"
+											:value="branch.organizeId">
+										</el-option>
+									</el-select>
+								<span slot="footer" class="dialog-footer">
+								<el-button @click="dialogVisibleBranch = false">取&nbsp;&nbsp;&nbsp;&nbsp;消</el-button>
+								<el-button type="primary" class="agreeBtn" @click="dialogVisibleBranch = false;branchSubmit()">确&nbsp;&nbsp;&nbsp;&nbsp;定</el-button>
+								</span>
+							</el-dialog>
+						</li>
+						<li id="replace">
+							<el-button plain class="backBtn" v-if="backBtn2" @click="replace()">重新派工</el-button>
+								<el-dialog
+								id="reviseWork"
+								title="重新派工"
+								:visible.sync="dialogVisibleReplace"
+								width="450px"
+								>
+								<el-input type="textarea" :rows="2" placeholder="请输入重新派工原因" v-model="textareareplace"></el-input>
+								<span slot="footer" class="dialog-footer">
+								<el-button @click="dialogVisibleReplace = false">取&nbsp;&nbsp;&nbsp;&nbsp;消</el-button>
+								<el-button type="primary" class="agreeBtn" @click="dialogVisibleReplace = false;replaceClick()">确&nbsp;&nbsp;&nbsp;&nbsp;定</el-button>
+								</span>
+							</el-dialog> 
+						</li>
+						<li><el-button plain id="el-button" v-if=" isSheet" @click="dialogVisible = true;sheetClick()">工单派工</el-button>
+							<el-dialog
+							title="工单派工"
+							id="plcWork"
+							:visible.sync="dialogVisible"
+							width="450px"
+							>
+							<div class="dialogDiv1">
+								<el-input placeholder="工单编号" v-model="sheetNum"></el-input>
+							</div>
+							<div class="dialogDiv2">
+								<el-input placeholder="客户名称" v-model="sheetName"></el-input>
+							</div>
+							<div class="dialogDiv3">
+								<el-select v-model="value7" placeholder="请选择服务人员">
+									<el-option-group v-for="group in options3" :key="group.id" :label="group.name">
+									<el-option v-for="item in group.emps" :key="item.id" :label="item.name" :value="item.name">
+									</el-option>
+									</el-option-group>
+								</el-select>
+							</div>
+							<span slot="footer" class="dialog-footer">
+							<el-button @click="dialogVisible = false">取&nbsp;&nbsp;&nbsp;&nbsp;消</el-button>
+							<el-button type="primary" class="agreeBtn" @click="dialogVisible = false;sheetOkClick()">确&nbsp;&nbsp;&nbsp;&nbsp;定</el-button>
+							</span>
+						</el-dialog>
+						</li>	
+						<!--  -->
+						<li id="answer"><el-button plain id="el-button" v-if="isForm"  @click="formClick()">填写回单</el-button>
+						<el-dialog title="填写回单" :visible.sync="dialogVisible1" width="680px" id="writeWork">
+							<el-form  :rules="rules" ref="ruleForm" :model="ruleForm"  class="demo-ruleForm">
+									<el-form-item  prop="categoryValue">
+										<el-select v-model="ruleForm.categoryValue" placeholder="请选择产品类别"  >
+											<el-option  v-for="item in options2":key="item.value" :label="item.label" :value="item.value"></el-option>
+										</el-select>
+									</el-form-item>
+									<el-form-item  prop="productValue">
+										<el-select v-model="ruleForm.productValue" placeholder="请选择产品" >
+											<el-option  v-for="item in options4":key="item.value" :label="item.label" :value="item.value"></el-option>
+										</el-select>
+									</el-form-item>
+									<el-form-item  prop="serialValue">
+										<el-input placeholder="请输入产品序列号" v-model="ruleForm.serialValue" size="large"></el-input>
+									</el-form-item>
+									<el-form-item>
+											<el-select v-model="ruleForm.stateValue" >
+												<el-option  v-for="item in options5":key="item.value" :label="item.label" :value="item.value"></el-option>
+											</el-select>
+									</el-form-item>
+									<el-form-item >
+										<el-select v-model="ruleForm.faultValue" placeholder="请选择故障类别" @focus="faultClick()">
+											<el-option  v-for="item in options6" :label="item.name" :value="item.name"></el-option>
+										</el-select>
+									</el-form-item>
+									<el-form-item  prop="textarea">
+										<el-input type="textarea" :rows="2" placeholder="请输入处理信息" v-model="ruleForm.textarea"></el-input>
+									</el-form-item>
+									<el-form-item class="divline">
+										<span>相关图片</span>
+										<el-upload
+											action="/uploadFile"
+											list-type="picture-card"
+											:on-success="uploadFileSuccess"
+											:on-preview="handlePictureCardPreview"
+											:on-remove="handleRemove">
+											<i class="el-icon-plus"></i>
+										</el-upload>
+										<el-dialog :visible.sync="dialogVisible3">
+											<img width="100%" :src="dialogImageUrl" alt="">
+										</el-dialog>
+									</el-form-item>
+									<el-form-item  >
+										<el-input type="textarea" :rows="2" placeholder="备注" v-model="ruleForm.textarea1"></el-input>
+									</el-form-item>
+							</el-form>
+							<!-- <el-form :model="ruleForm" :rules="rules" ref="ruleForm"  class="demo-ruleForm">
+								<el-form-item  prop="name">
+									<el-select v-model="categoryValue" placeholder="请选择" popper-class="itemDivSelect" >
+										<el-option  v-for="item in options2":key="item.value" :label="item.label" :value="item.value"></el-option>
+									</el-select>
+								</el-form-item>
+								<el-form-item  prop="name">
+
+									<el-select v-model="productValue" placeholder="请选择" popper-class="itemDivSelect">
+										<el-option  v-for="item in options4":key="item.value" :label="item.label" :value="item.value"></el-option>
+									</el-select>
+								</el-form-item>
+
+								
+								<el-form-item  prop="name">
+
+									<el-input placeholder="请输入产品序列号" v-model="serialValue"></el-input>
+								</el-form-item>
+
+								<el-form-item  prop="name">
+
+									<el-select v-model="stateValue" placeholder="请选择" popper-class="itemDivSelect">
+										<el-option  v-for="item in options5":key="item.value" :label="item.label" :value="item.value"></el-option>
+									</el-select>
+								</el-form-item>
+
+								<el-form-item  prop="name">
+
+									<el-select v-model="faultValue" placeholder="请选择" popper-class="itemDivSelect" @focus="faultClick()">
+										<el-option  v-for="item in options6":key="item.value" :label="item.label" :value="item.value"></el-option>
+									</el-select>
+								</el-form-item>
+								<el-form-item  prop="name">
+
+									<el-input type="textarea" :rows="2" placeholder="请输入内容" v-model="textarea"></el-input>
+								</el-form-item>
+								<el-form-item  prop="name">
+
+										<el-upload
+												action="/uploadFile"
+												list-type="picture-card"
+												:on-success="uploadFileSuccess"
+												:on-preview="handlePictureCardPreview"
+												:on-remove="handleRemove">
+												<i class="el-icon-plus"></i>
+										</el-upload>
+												<el-dialog :visible.sync="dialogVisible3">
+												  <img width="100%" :src="dialogImageUrl" alt="">
+												</el-dialog>
+									</el-form-item>
+
+								<el-form-item  prop="name">
+
+									<el-input type="textarea" :rows="2" placeholder="请输入内容" v-model="textarea1"></el-input>
+								</el-form-item>
+
+								</el-form>	 -->
+							<span slot="footer" class="dialog-footer">
+							<el-button @click="dialogVisible1 = false">取&nbsp;&nbsp;&nbsp;&nbsp;消</el-button>
+							<el-button type="primary" class="agreeBtn" @click="isFormOk('ruleForm')">确&nbsp;&nbsp;&nbsp;&nbsp;定</el-button>
+							</span>
+						</el-dialog>
+						</li>
+						<li><el-button plain id="el-button" v-if="isReview" @click="isReviewOk()">工单审核</el-button>
+							<el-dialog
+								title="工单审核"
+								:visible.sync="outerVisible"
+								width="450px"
+								id="agreeReview"
+								center>
+									<el-dialog
+											width="450px"
+											title="确认操作"
+											id="reviewInner"
+											:visible.sync="innerVisible"
+										append-to-body>
+										<span class="el-icon-danger" style="font-size:18px;color:black">如若审核不通过将会返回重新派工，请认真考虑</span>
+										<span slot="footer" class="dialog-footer">
+											<el-button  @click="innerVisible = false">取&nbsp;&nbsp;&nbsp;&nbsp;消</el-button>
+											<el-button type="primary" class="agreeBtn" @click="outerVisible = false;innerVisible=false;reviewFault()">确&nbsp;&nbsp;&nbsp;&nbsp;定</el-button>
+										</span>
+									</el-dialog>
+							<span class="el-icon-warning" style="font-size:22px;text-align: center;">请认真考虑审核是否通过</span>
+							<span slot="footer" class="dialog-footer">
+								<el-button type="danger" @click="innerVisible = true">审核不通过</el-button>
+									<el-button type="primary" class="agreeBtn"  @click="outerVisible = false;reviewOk()">审核通过</el-button>
+							</span>
+							</el-dialog>
+						</li>
+						<li><el-button plain id="el-button" v-if="isClose" @click="closeWork()">关闭工单</el-button></li>
+						<li><el-button plain id="el-button" v-if="closeOk" disabled>已关闭</el-button></li>
+						
+						
+						<div class="clear"></div>
+					</ul>
+					<div id="tablesOne" v-if="tablesOneClick">
+						<table width="100%"  cellspacing="3">
+							<thead align="left">
+								<tr>
+									<td width="40px">活动</td>
+									<td width="330px">活动描述</td>
+									<td width="100px">处理组织</td>
+									<td width="80px">处理人员</td>
+									<td width="200px">处理时间</td>
+								</tr>
+							</thead>
+							<tbody  v-for="(value,key) in operation" align="left">
+								<tr v-if="key">
+									<td class="firstTd"><p></p></td>
+								</tr>
+								<tr>
+									<td>{{value.operationStr}}</td>
+									<td>{{value.describes}}</td>
+									<td width="80px">{{value.departmentName}}</td>
+									<td>{{value.employeeName}}</td>
+									<td>{{value.operationTime}}</td>
+								</tr>
+								
+							</tbody>
+						</table>
+					</div>
+					<div id="tablesTwo" v-if="tablesTwoClick">
+						<el-table :data="tableData" border style="width:100%">
+							<el-table-column label="基本信息" align="center">
+							<el-table-column prop="firstRow" width="142" align="center"></el-table-column>
+							<el-table-column prop="secRow" show-header=false></el-table-column>
+							</el-table-column>
+						</el-table>
+					</div>
+					<div id="tablesThr" v-if="tablesThrClick">
+						<table width="100%"  cellpadding="10" cellspacing="0">
+							<thead align="center">
+								<tr>
+									<td colspan="2">客户评价</td>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>评价客户</td>
+									<td>{{evaluateName}}</td>
+								</tr>
+								<tr>
+									<td>评价结果</td>
+									<td><el-rate v-model="value3" show-text></el-rate></td>
+								</tr>
+								<tr>
+									<td>评价描述</td>
+									<td>{{evaluateDsr}}</td>
+								</tr>
+								<tr>
+									<td>评价时间</td>
+									<td>{{evaluateTime}}</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<div class="clear"></div>
+			</div> 
+		</div>
+		<div class="clear"></div>
+	</div>
+	<script type="text/javascript" src="../static/vue.js"></script>
+	<script src="../static/timeStamp.js"></script>
+	<script src="../static/axios.min.js"></script>
+	<script type="text/javascript" src="../static/element-ui.js"></script>
+	<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+	<script src="static/receiving.js"></script>
+</body>
+		
+</html>

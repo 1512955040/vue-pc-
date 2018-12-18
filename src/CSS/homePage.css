@@ -1,0 +1,297 @@
+*{
+	margin: 0;
+	padding: 0;
+}
+html{
+	width:100%;
+	height: 100%;
+}
+body{
+	width:100%;
+	height:100%;
+}
+ul{
+	list-style: none;
+}
+.clear{
+	clear:both;
+}
+#body{
+	width: 100%;
+	height: 100%;
+	font-family: "微软雅黑";
+	/* width:1201px; */
+	margin:0 auto;
+	box-sizing:border-box;
+	/* border: 1px solid #ddd; */
+}
+#nav{
+	width:100%;
+	height:680px;
+	box-sizing: border-box;
+	border:1px solid black;
+   /* Safari 5.1 - 6.0 */
+  			/* 	background: -webkit-radial-gradient(to top right,#0B4082 0%,#0D4F98 25%,#217ECB 75%,#3DB5F1 100%); 
+  				background: -o-radial-gradient(to top right,#0B4082 0%,#0D4F98 25%,#217ECB 75%,#3DB5F1 100%);
+  				background: -moz-radial-gradient(to top right,#0B4082 0%,#0D4F98 25%,#217ECB 75%,#3DB5F1 100%);
+				background: linear-gradient(to top right,#0B4082 0%,#0D4F98 25%,#217ECB 75%,#3DB5F1 100%) no-repeat center; */
+}
+#navinner{
+	width:1200px;
+	height:100%;
+	margin:0 auto;
+}
+#navbar{
+	width:100%;
+	height:80px;
+}
+#logo{
+	width:90px;
+	height:28px;
+	background-image: url(../imgs/login/01_03.png);
+	position:absolute;
+	top:26px;
+}
+#navbar li{
+	float:left;
+	margin-left:50px;
+	position:relative;
+	left:100px;
+}
+#navbar a{
+	color:#9DCBF5;
+	line-height:71px;
+	font-size:22px;
+	font-weight:400;
+} 
+#navbar a:hover{
+	color:#fff;
+} 
+#navbar li::after{
+	content:"";
+	clear:both;
+	display: block;
+}
+#navbar li .active{
+	color:#fff;
+}
+#btnDiv{
+	float:right;
+	position:relative;
+	top:19px;
+}
+#btnDiv::after{
+	content:"";
+	clear:both;
+	display: block;
+}
+#intrduct{
+	margin-top:95px;
+}
+#intrduct li{
+	margin-bottom:20px;
+	text-align: center;
+}
+#intrduct li:nth-child(1){
+	font-size:34px;
+	color:#fff;
+}
+#intrduct li:nth-child(2){
+	font-size:20px;
+	color:#A1CCF6;
+}
+#intrduct input{
+	border-radius: 5px;
+	border:none;
+	padding-left:10px;
+	margin-right:10px;
+	background-color:#A1CEF7;
+}
+#intrduct input:focus{
+	border-color:transparent !important;
+	
+}
+#intrduct input::-webkit-input-placeholder{
+    color:#176EBE;
+}
+#intrduct input::-moz-placeholder{   /* Mozilla Firefox 19+ */
+    color:#176EBE;
+}
+#intrduct input:-moz-placeholder{    /* Mozilla Firefox 4 to 18 */
+    color:#176EBE;
+}
+#intrduct input:-ms-input-placeholder{  /* Internet Explorer 10-11 */ 
+    color:#176EBE;
+}
+#sectionOutDiv{
+	width:100%;
+	height:1321px;
+	background-color:#fff;
+}
+section{
+	height:1321px;
+	padding-top:80px;
+	width:1200px;
+	margin:0 auto;
+	box-sizing: border-box;
+	background-color:#fff;
+	padding-bottom:80px;
+}
+section>ul{
+}
+section>ul li{
+	margin-bottom:20px;
+	text-align: center;
+}
+section>ul li:nth-child(1){
+	font-size:34px;
+}
+section>ul li:nth-child(2){
+	font-size:26px;
+}
+section table td{
+	padding:0;
+	width:400px;
+	height:372px;
+	box-sizing: border-box;
+}
+section table td ul{
+	position:relative;
+	top:20px;
+}
+section table td li{
+	margin-bottom:40px;
+	text-align: center;
+	font-size: 20px;
+}
+section table td li:last-child{
+	text-align: center;
+}
+/* section table tr td ul li:last-child{
+	margin-bottom:0;
+}
+section table tr:nth-child(1) td:nth-child(1) ul li:first-child{
+	position:relative;
+	top:-18px;
+}
+section table tr:nth-child(2) td:nth-child(1) ul li:first-child{
+	position:relative;
+	top:-18px;
+} */
+#loginThr{
+	width:100%;
+	height:290px;
+	box-sizing: border-box;
+   /* Safari 5.1 - 6.0 */
+ /* 				background: -webkit-radial-gradient(to top right,#0B4082 0%,#0D4F98 25%,#217ECB 75%,#3DB5F1 100%); 
+  				background: -o-radial-gradient(to top right,#0B4082 0%,#0D4F98 25%,#217ECB 75%,#3DB5F1 100%);
+  				background: -moz-radial-gradient(to top right,#0B4082 0%,#0D4F98 25%,#217ECB 75%,#3DB5F1 100%);
+  			background: linear-gradient(to top right,#0B4082 0%,#0D4F98 25%,#217ECB 75%,#3DB5F1 100%) no-repeat center; */
+}
+#loginThr input{
+	border-radius: 5px;
+	border:none;
+	padding-left:10px;
+	margin-right:10px;
+	background-color:#A1CEF7;
+}
+#loginThr input:focus{
+	border-color:transparent !important;
+	
+}
+#loginThr input::-webkit-input-placeholder{
+    color:#176EBE;
+}
+#loginThr input::-moz-placeholder{   /* Mozilla Firefox 19+ */
+    color:#176EBE;
+}
+#loginThr input:-moz-placeholder{    /* Mozilla Firefox 4 to 18 */
+    color:#176EBE;
+}
+#loginThr input:-ms-input-placeholder{  /* Internet Explorer 10-11 */ 
+    color:#176EBE;
+}
+#loginThr ul{
+}
+#loginThr ul li{
+	color:#fff;
+	position:relative;
+	top:70px;
+	margin-bottom: 60px;
+	text-align: center;
+}
+#loginFour{
+	width:1200px;
+	height:310px;
+	margin:0 auto;
+	margin-top:60px;
+	box-sizing: border-box;
+}
+#loginFour ul li{
+	display: inline-block;
+	width:284px;
+	height:146px;
+	box-sizing: border-box;
+	margin-bottom:20px
+}
+#loginFour ul li:nth-child(1),
+#loginFour ul li:nth-child(2),
+#loginFour ul li:nth-child(3),
+#loginFour ul li:nth-child(5),
+#loginFour ul li:nth-child(6),
+#loginFour ul li:nth-child(7){
+	margin-right:15px;
+}
+#loginFour ul{
+	margin-top:50px;
+}
+#loginFour ul li p{
+	background:black;
+	opacity: 0.5;
+	color:#fff;
+	text-align: center;
+	position: relative;
+	top:-21px;
+}
+#loginFour table tr td{
+	width:297px;
+	text-align: center;
+}
+.el-button1{
+	border-color:#186DBE;
+	color:#fff;
+	background-color:#186DBE;
+	font-size:16px;
+	padding:13px 18px;
+	margin-right:5px;
+}
+.el-button{
+	font-size:16px;
+}
+.el-button1:hover{
+	transition:background-color 0.7s;
+	transition:border-color 0.7s;
+	border-color:#409EFF;
+	background-color:#409EFF;
+}
+#logoSpan{
+	font-size:54px;
+}
+.el-button2{
+	height:56px;
+	width:135px;
+	font-size:18px;
+	font-weight:700;
+}
+input{
+	width:260px;
+	height:56px;
+}
+#modelLinear{
+		background: -webkit-radial-gradient(to top right,#0B4082 0%,#0D4F98 25%,#217ECB 75%,#3DB5F1 100%); 
+		/* Opera 11.6 - 12.0 */
+		background: -o-radial-gradient(to top right,#0B4082 0%,#0D4F98 25%,#217ECB 75%,#3DB5F1 100%);
+		/* Firefox 3.6 - 15 */
+		background: -moz-radial-gradient(to top right,#0B4082 0%,#0D4F98 25%,#217ECB 75%,#3DB5F1 100%);
+	background: linear-gradient(to top right,#0B4082 0%,#0D4F98 25%,#217ECB 75%,#3DB5F1 100%) no-repeat center;
+}
